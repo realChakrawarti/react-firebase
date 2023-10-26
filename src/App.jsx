@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import {collection, getDocs} from "firebase/firestore"
-import {firestore as db} from "./config/firebase"
+import { collection, getDocs } from "firebase/firestore";
+import { firestore as db } from "./config/firebase";
 
 function App() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const [posts, setPosts] = useState();
 
   const handleOnChange = (event) => {
     const field = event.target;
@@ -17,28 +19,42 @@ function App() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault()
-    console.log('>>> ',event.target.email.value, ':', event.target.password.value)
-  }
+    event.preventDefault();
+    console.log(
+      ">>> ",
+      event.target.email.value,
+      ":",
+      event.target.password.value
+    );
+  };
 
   const getPosts = async () => {
-    const snapshot = await getDocs(collection(db, 'posts'));
-    snapshot.forEach(doc => {
-      const id = doc.id
-      const data = doc.data()
-      console.log('id and data',{id, data})
-    })
-  }
+    const snapshot = await getDocs(collection(db, "posts"));
+
+    const postData = snapshot.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() };
+    });
+
+    setPosts(postData)
+    // snapshot.forEach(doc => {
+    //   const id = doc.id
+    //   const data = doc.data()
+    //   console.log('id and data',{id, data})
+    // })
+  };
 
   useEffect(() => {
     getPosts();
-  }, [])
+  }, []);
 
   return (
     <>
       <h3>Authentication w/ Firebase</h3>
 
-      <form style={{ display: "flex", flexDirection: "column", gap: "10px" }} onSubmit={handleSubmit}>
+      <form
+        style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+        onSubmit={handleSubmit}
+      >
         <div>
           <label htmlFor="email">Email: </label>
           <input
@@ -60,8 +76,10 @@ function App() {
             onChange={handleOnChange}
           />
         </div>
-        <button type="submit" style={{display: "none"}} />
+        <button type="submit" style={{ display: "none" }} />
       </form>
+
+      {JSON.stringify(posts, null, 2)}
     </>
   );
 }
