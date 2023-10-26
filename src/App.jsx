@@ -1,85 +1,35 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-import { collection, getDocs } from "firebase/firestore";
-import { firestore as db } from "./config/firebase";
+import Login from "./components/Authenticate/Login";
+import ShowPosts from "./components/Posts/ShowPosts";
+import NavigationLinks from "./components/Navigation/NavigationLinks";
+
+const resetRouteState = {
+  home: false,
+  showPosts: false,
+  addPost: false,
+  login: false,
+};
 
 function App() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const [route, setRoute] = useState({
+    home: true,
+    showPosts: false,
+    addPost: false,
+    login: false,
   });
 
-  const [posts, setPosts] = useState();
-
-  const handleOnChange = (event) => {
-    const field = event.target;
-
-    const newData = { [field.name]: field.value };
-    setFormData({ ...formData, ...newData });
+  const handleNavigationRoute = (state) => {
+    setRoute({ ...resetRouteState, ...state });
   };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(
-      ">>> ",
-      event.target.email.value,
-      ":",
-      event.target.password.value
-    );
-  };
-
-  const getPosts = async () => {
-    const snapshot = await getDocs(collection(db, "posts"));
-
-    const postData = snapshot.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() };
-    });
-
-    setPosts(postData)
-    // snapshot.forEach(doc => {
-    //   const id = doc.id
-    //   const data = doc.data()
-    //   console.log('id and data',{id, data})
-    // })
-  };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
 
   return (
     <>
-      <h3>Authentication w/ Firebase</h3>
+      <NavigationLinks handleRoute={handleNavigationRoute} />
 
-      <form
-        style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-        onSubmit={handleSubmit}
-      >
-        <div>
-          <label htmlFor="email">Email: </label>
-          <input
-            required
-            id="email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleOnChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password: </label>
-          <input
-            required
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleOnChange}
-          />
-        </div>
-        <button type="submit" style={{ display: "none" }} />
-      </form>
-
-      {JSON.stringify(posts, null, 2)}
+      {route.login && <Login />}
+      {route.showPosts && <ShowPosts />}
+      {route.addPost && <>Add Post Placeholder</>}
     </>
   );
 }
