@@ -6,19 +6,22 @@ import {
   getDoc,
   getDocs,
   deleteDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { firestore as db } from "../../config/firebase";
 import PostCard from "./PostCard";
 
 const ShowPosts = ({ posts, setPosts }) => {
+  let unsubscribe;
   const getPosts = async () => {
-    const snapshot = await getDocs(collection(db, "posts"));
-
-    const postData = snapshot.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() };
+    console.log("Subscribed to real-time database");
+    unsubscribe = onSnapshot(collection(db, "posts"), (snapshot) => {
+      console.log("Receiving data...");
+      const postData = snapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+      setPosts(postData);
     });
-
-    setPosts(postData);
   };
 
   const removePost = async (id) => {
@@ -33,6 +36,10 @@ const ShowPosts = ({ posts, setPosts }) => {
 
   useEffect(() => {
     getPosts();
+    return () => {
+      console.log("Unsubscribing to real-time database");
+      unsubscribe();
+    };
   }, []);
 
   return (

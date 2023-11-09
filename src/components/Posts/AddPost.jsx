@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { collection, addDoc, getDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { firestore as db } from "../../config/firebase";
 
 const initialFormData = {
-    title: "",
-    content: "",
-  }
+  title: "",
+  content: "",
+};
 
 const AddPost = ({ setPosts }) => {
   const [formData, setFormData] = useState(initialFormData);
@@ -20,13 +20,10 @@ const AddPost = ({ setPosts }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        const docRef = await addDoc(collection(db, "posts"), formData);
-        const doc = await getDoc(docRef)
-        const newPost = { id: docRef.id, ...doc.data() };
-        setPosts((prev) => [newPost, ...prev]);
-        setFormData(initialFormData)
+      await addDoc(collection(db, "posts"), formData);
+      setFormData(initialFormData);
     } catch (err) {
-        console.error(JSON.stringify(err))
+      console.error(JSON.stringify(err));
     }
   };
 
