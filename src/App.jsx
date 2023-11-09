@@ -1,21 +1,19 @@
 import { useState } from "react";
 import "./App.css";
 import Login from "./components/Authenticate/Login";
-import ShowPosts from "./components/Posts/ShowPosts";
 import NavigationLinks from "./components/Navigation/NavigationLinks";
+import PostPage from "./components/Posts/PostPage";
 
 const resetRouteState = {
   home: false,
-  showPosts: false,
-  addPost: false,
+  posts: false,
   login: false,
 };
 
 function App() {
   const [route, setRoute] = useState({
     home: true,
-    showPosts: false,
-    addPost: false,
+    posts: false,
     login: false,
   });
 
@@ -28,8 +26,7 @@ function App() {
       <NavigationLinks handleRoute={handleNavigationRoute} />
 
       {route.login && <Login />}
-      {route.showPosts && <ShowPosts />}
-      {route.addPost && <>Add Post Placeholder</>}
+      {route.posts && <PostPage />}
     </>
   );
 }
