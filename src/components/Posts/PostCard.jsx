@@ -1,7 +1,17 @@
 import { useState } from "react";
+import { deleteDoc, doc } from "firebase/firestore";
+import { firestore as db } from "../../config/firebase"
 
-export const PostCard = ({ id, title, content, removePost }) => {
+export const PostCard = ({ id, title, content }) => {
   const [updateStyle, setUpdateStyle] = useState({});
+
+  const removePost = async (id) => {
+    try {
+      await deleteDoc(doc(db, `posts/${id}`));
+    } catch (err) {
+      console.error(JSON.stringify(err));
+    }
+  };
 
   return (
     <div

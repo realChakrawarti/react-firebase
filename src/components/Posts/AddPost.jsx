@@ -7,7 +7,7 @@ const initialFormData = {
   content: "",
 };
 
-const AddPost = ({ setPosts }) => {
+const AddPost = () => {
   const [formData, setFormData] = useState(initialFormData);
 
   const handleOnChange = (event) => {
