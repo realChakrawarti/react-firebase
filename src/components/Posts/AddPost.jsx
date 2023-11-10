@@ -17,6 +17,7 @@ const AddPost = () => {
     setFormData({ ...formData, ...newData });
   };
 
+  // Refer: https://firebase.google.com/docs/firestore/manage-data/add-data#add_a_document
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {

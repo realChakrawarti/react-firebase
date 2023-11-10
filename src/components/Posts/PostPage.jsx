@@ -11,6 +11,7 @@ let unsubscribe;
 const PostPage = () => {
   const [posts, setPosts] = useState();
 
+  // Refer: https://firebase.google.com/docs/firestore/query-data/listen
   const getPosts = async () => {
     console.log("Subscribed to real-time database");
     unsubscribe = onSnapshot(collection(db, "posts"), (snapshot) => {
@@ -33,7 +34,7 @@ const PostPage = () => {
   return (
     <>
       <AddPost />
-      <ShowPosts posts={posts} setPosts={setPosts} />
+      <ShowPosts posts={posts} />
     </>
   );
 };

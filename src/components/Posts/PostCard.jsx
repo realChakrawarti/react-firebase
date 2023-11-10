@@ -1,13 +1,27 @@
 import { useState } from "react";
-import { deleteDoc, doc } from "firebase/firestore";
-import { firestore as db } from "../../config/firebase"
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { firestore as db } from "../../config/firebase";
 
-export const PostCard = ({ id, title, content }) => {
+export const PostCard = ({ id, title, content, favorite }) => {
   const [updateStyle, setUpdateStyle] = useState({});
 
-  const removePost = async (id) => {
+  const docRef = doc(db, `posts/${id}`);
+
+  // Refer: https://firebase.google.com/docs/firestore/manage-data/delete-data#delete_documents
+  const removePost = async () => {
     try {
-      await deleteDoc(doc(db, `posts/${id}`));
+      await deleteDoc(docRef);
+    } catch (err) {
+      console.error(JSON.stringify(err));
+    }
+  };
+
+  // Refer: https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
+  const updateFavorite = async () => {
+    try {
+      await updateDoc(docRef, {
+        favorite: !favorite,
+      });
     } catch (err) {
       console.error(JSON.stringify(err));
     }
@@ -17,6 +31,7 @@ export const PostCard = ({ id, title, content }) => {
     <div
       style={{
         display: "flex",
+        gap: "10px",
         background: "#eeefff",
         alignItems: "center",
         color: "#00000e",
@@ -28,13 +43,16 @@ export const PostCard = ({ id, title, content }) => {
         <div>{title}</div>
         <div>{content}</div>
       </div>
+      <div style={{ cursor: "pointer" }} onClick={updateFavorite}>
+        {favorite ? "❤️" : "🖤"}
+      </div>
       <div
         onMouseOver={() =>
           setUpdateStyle({ filter: "drop-shadow(1.5px 1.5px red)" })
         }
         onMouseOut={() => setUpdateStyle({})}
         style={{ ...updateStyle, cursor: "pointer" }}
-        onClick={() => removePost(id)}
+        onClick={removePost}
       >
         ❌
       </div>

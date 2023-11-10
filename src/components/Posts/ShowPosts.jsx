@@ -13,10 +13,8 @@ const ShowPosts = ({ posts }) => {
       {posts?.length ? (
         posts.map((item) => (
           <PostCard
-            id={item.id}
             key={item.id}
-            title={item.title}
-            content={item.content}
+            {...item}
           />
         ))
       ) : (
