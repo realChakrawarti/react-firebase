@@ -1,59 +1,51 @@
 import { useState } from "react";
+import EmailPassword from "./EmailPassword";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleAuthProvider } from "../../config/firebase";
 
-const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+const Login = ({user, setUser}) => {
+  const [loginMode, setLoginMode] = useState("email");
 
-  const handleOnChange = (event) => {
-    const field = event.target;
-
-    const newData = { [field.name]: field.value };
-    setFormData({ ...formData, ...newData });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(
-      ">>> ",
-      event.target.email.value,
-      ":",
-      event.target.password.value
-    );
+  const signInWithGoogle = async () => {
+    try {
+    const data = await signInWithPopup(auth, googleAuthProvider);
+    setUser(data.user)
+    } catch (err){
+      console.error(JSON.stringify(err));
+    }
   };
 
   return (
     <>
       <h3>Authentication w/ Firebase</h3>
+      <div>
+        <input
+          type="radio"
+          onChange={(e) => setLoginMode(e.target.value)}
+          checked={loginMode === "email"}
+          name="loginMode"
+          id="loginWithEmail"
+          value="email"
+        />
+        <label htmlFor="loginWithEmail">Login in with Email & Password</label>
+      </div>
+      <div>
+        <input
+          type="radio"
+          onChange={(e) => setLoginMode(e.target.value)}
+          checked={loginMode === "google"}
+          name="loginMode"
+          id="loginWithGoogle"
+          value="google"
+        />
+        <label htmlFor="loginWithGoogle">Login in with Google</label>
+      </div>
 
-      <form
-        style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-        onSubmit={handleSubmit}
-      >
-        <div>
-          <label htmlFor="email">Email: </label>
-          <input
-            required
-            id="email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleOnChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password: </label>
-          <input
-            required
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleOnChange}
-          />
-        </div>
-        <button type="submit" style={{ display: "none" }} />
-      </form>
+      {loginMode === "email" ? (
+        <EmailPassword />
+      ) : (
+        <button onClick={signInWithGoogle}>Login with Google</button>
+      )}
     </>
   );
 };

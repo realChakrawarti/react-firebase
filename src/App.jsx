@@ -17,15 +17,17 @@ function App() {
     login: false,
   });
 
+  const [user, setUser] = useState()
+
   const handleNavigationRoute = (state) => {
     setRoute({ ...resetRouteState, ...state });
   };
 
   return (
     <>
-      <NavigationLinks handleRoute={handleNavigationRoute} />
+      <NavigationLinks user={user} handleRoute={handleNavigationRoute} />
 
-      {route.login && <Login />}
+      {!user && route.login && <Login user={user} setUser={setUser} />}
       {route.posts && <PostPage />}
     </>
   );
