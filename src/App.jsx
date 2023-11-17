@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Login from "./components/Authenticate/Login";
 import NavigationLinks from "./components/Navigation/NavigationLinks";
 import PostPage from "./components/Posts/PostPage";
+import { auth } from "./config/firebase";
 
 const resetRouteState = {
   home: false,
   posts: false,
   login: false,
 };
+
+let unsubscribeFromAuth;
 
 function App() {
   const [route, setRoute] = useState({
@@ -17,7 +20,24 @@ function App() {
     login: false,
   });
 
-  const [user, setUser] = useState()
+  const [user, setUser] = useState();
+
+  const getLoginState = async () => {
+    unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
+      console.log("Receiving authentication state...");
+      setUser(user);
+    });
+    console.log("Subscribed to authentication state");
+  };
+
+  useEffect(() => {
+    getLoginState();
+
+    return () => {
+      unsubscribeFromAuth();
+      console.log("Unsubscribing from authentication state");
+    };
+  }, []);
 
   const handleNavigationRoute = (state) => {
     setRoute({ ...resetRouteState, ...state });
@@ -27,7 +47,7 @@ function App() {
     <>
       <NavigationLinks user={user} handleRoute={handleNavigationRoute} />
 
-      {!user && route.login && <Login user={user} setUser={setUser} />}
+      {!user && route.login && <Login user={user} />}
       {route.posts && <PostPage />}
     </>
   );

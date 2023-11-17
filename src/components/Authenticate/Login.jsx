@@ -3,14 +3,13 @@ import EmailPassword from "./EmailPassword";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleAuthProvider } from "../../config/firebase";
 
-const Login = ({user, setUser}) => {
+const Login = () => {
   const [loginMode, setLoginMode] = useState("email");
 
   const signInWithGoogle = async () => {
     try {
-    const data = await signInWithPopup(auth, googleAuthProvider);
-    setUser(data.user)
-    } catch (err){
+      await signInWithPopup(auth, googleAuthProvider);
+    } catch (err) {
       console.error(JSON.stringify(err));
     }
   };

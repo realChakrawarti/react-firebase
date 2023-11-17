@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { firestore as db } from "../../config/firebase";
 
-let unsubscribe;
+let unsubscribeFromStore;
 
 const PostPage = () => {
   const [posts, setPosts] = useState();
@@ -14,7 +14,7 @@ const PostPage = () => {
   // Refer: https://firebase.google.com/docs/firestore/query-data/listen
   const getPosts = async () => {
     console.log("Subscribed to real-time database");
-    unsubscribe = onSnapshot(collection(db, "posts"), (snapshot) => {
+    unsubscribeFromStore = onSnapshot(collection(db, "posts"), (snapshot) => {
       console.log("Receiving data...");
       const postData = snapshot.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
@@ -27,7 +27,7 @@ const PostPage = () => {
     getPosts();
     return () => {
       console.log("Unsubscribing to real-time database");
-      unsubscribe();
+      unsubscribeFromStore();
     };
   }, []);
 

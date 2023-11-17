@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { auth } from "../../config/firebase";
 
 const NavigationLinks = ({ handleRoute, user }) => {
   const [showProfilePopup, setShowProfilePopup] = useState(false);
@@ -40,7 +41,14 @@ const NavigationLinks = ({ handleRoute, user }) => {
               top: "50px",
             }}
           >
-            <button style={{ position: "absolute", right: "0px" }}>
+            <button
+              onClick={() => {
+                auth.signOut();
+                setShowProfilePopup(false);
+                handleRoute({ home: true });
+              }}
+              style={{ position: "absolute", right: "0px" }}
+            >
               Logout
             </button>
           </div>
