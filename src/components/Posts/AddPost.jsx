@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { firestore as db } from "../../config/firebase";
+import { auth, firestore as db } from "../../config/firebase";
 
 const initialFormData = {
   title: "",
@@ -10,18 +10,24 @@ const initialFormData = {
 const AddPost = () => {
   const [formData, setFormData] = useState(initialFormData);
 
+  const { uid, displayName, email, photoURL } = auth.currentUser || {};
+
   const handleOnChange = (event) => {
     const field = event.target;
-
-    const newData = { [field.name]: field.value };
-    setFormData({ ...formData, ...newData });
+    setFormData({ ...formData, [field.name]: field.value });
   };
 
   // Refer: https://firebase.google.com/docs/firestore/manage-data/add-data#add_a_document
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await addDoc(collection(db, "posts"), formData);
+      const data = {
+        title: formData.title.trim(),
+        content: formData.content,
+        user: { uid, displayName, email, photoURL },
+      };
+      await addDoc(collection(db, "posts"), data);
+
       setFormData(initialFormData);
     } catch (err) {
       console.error(JSON.stringify(err));
