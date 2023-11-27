@@ -1,26 +1,24 @@
 import { useState } from "react";
 
-const EmailPassword = () => {
+const EmailPassword = ({ signInWithEmailPassword }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const handleOnChange = (event) => {
-    const field = event.target;
-
-    const newData = { [field.name]: field.value };
-    setFormData({ ...formData, ...newData });
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(
-      ">>> ",
-      event.target.email.value,
-      ":",
-      event.target.password.value
-    );
+    const { email, password } = formData;
+
+    if (!email || !password)
+      throw new Error("Either email or password is empty.");
+
+    signInWithEmailPassword(email, password);
   };
 
   return (

@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
-import {getAuth, GoogleAuthProvider} from "firebase/auth"
+import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword} from "firebase/auth"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -10,7 +10,7 @@ import {getAuth, GoogleAuthProvider} from "firebase/auth"
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBCQLfCT4TxdbrmzsnkGDnrRcSznypUuyA",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "fir-go-c3121.firebaseapp.com",
   projectId: "fir-go-c3121",
   storageBucket: "fir-go-c3121.appspot.com",
@@ -27,3 +27,4 @@ const app = initializeApp(firebaseConfig);
 export const firestore = getFirestore(app);
 export const auth = getAuth(app)
 export const googleAuthProvider = new GoogleAuthProvider()
+export const emailPasswordAuthProvider = createUserWithEmailAndPassword

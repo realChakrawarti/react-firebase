@@ -1,10 +1,19 @@
 import { useState } from "react";
 import EmailPassword from "./EmailPassword";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, googleAuthProvider } from "../../config/firebase";
 
 const Login = () => {
   const [loginMode, setLoginMode] = useState("email");
+
+  const signInWithEmailPassword = async (email, password) => {
+    try {
+      // Refer: https://firebase.google.com/docs/auth/web/password-auth#sign_in_a_user_with_an_email_address_and_password
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      console.error(JSON.stringify(err, null, 2));
+    }
+  };
 
   const signInWithGoogle = async () => {
     try {
@@ -16,7 +25,7 @@ const Login = () => {
 
   return (
     <>
-      <h3>Authentication w/ Firebase</h3>
+      <h2>Authentication w/ Firebase</h2>
       <div>
         <input
           type="radio"
@@ -41,7 +50,7 @@ const Login = () => {
       </div>
 
       {loginMode === "email" ? (
-        <EmailPassword />
+        <EmailPassword signInWithEmailPassword={signInWithEmailPassword} />
       ) : (
         <button onClick={signInWithGoogle}>Login with Google</button>
       )}

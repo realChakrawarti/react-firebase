@@ -4,6 +4,7 @@ import Login from "./components/Authenticate/Login";
 import NavigationLinks from "./components/Navigation/NavigationLinks";
 import PostPage from "./components/Posts/PostPage";
 import { auth } from "./config/firebase";
+import Signup from "./components/Authenticate/Signup";
 
 const resetRouteState = {
   home: false,
@@ -18,6 +19,7 @@ function App() {
     home: true,
     posts: false,
     login: false,
+    signup: false,
   });
 
   const [user, setUser] = useState();
@@ -49,6 +51,7 @@ function App() {
 
       {!user && route.login && <Login user={user} />}
       {route.posts && <PostPage />}
+      {route.signup && <Signup />}
     </>
   );
 }
