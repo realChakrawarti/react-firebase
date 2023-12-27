@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { firestore as db } from "../../config/firebase";
+import { auth, firestore as db } from "../../config/firebase";
 
-export const PostCard = ({ id, title, content, favorite }) => {
+export const PostCard = ({ id, title, content, favorite, user }) => {
   const [updateStyle, setUpdateStyle] = useState({});
+
+  const currentUser = auth.currentUser;
 
   const docRef = doc(db, `posts/${id}`);
 
@@ -46,16 +48,19 @@ export const PostCard = ({ id, title, content, favorite }) => {
       <div style={{ cursor: "pointer" }} onClick={updateFavorite}>
         {favorite ? "❤️" : "🖤"}
       </div>
-      <div
-        onMouseOver={() =>
-          setUpdateStyle({ filter: "drop-shadow(1.5px 1.5px red)" })
-        }
-        onMouseOut={() => setUpdateStyle({})}
-        style={{ ...updateStyle, cursor: "pointer" }}
-        onClick={removePost}
-      >
-        ❌
-      </div>
+      {/* Show delete button only when {user.uid} matches the {currentUser.uid} */}
+      {user.uid === currentUser.uid && (
+        <div
+          onMouseOver={() =>
+            setUpdateStyle({ filter: "drop-shadow(1.5px 1.5px red)" })
+          }
+          onMouseOut={() => setUpdateStyle({})}
+          style={{ ...updateStyle, cursor: "pointer" }}
+          onClick={removePost}
+        >
+          ❌
+        </div>
+      )}
     </div>
   );
 };

@@ -23,3 +23,16 @@ service cloud.firestore {
   }
 }
 ```
+
+
+### Deploying web app on firebase hosting
+
+- Install firebase-tools globally -> `npm install -g firebase-tools`
+- Login into firebase on CLI -> `firebase login``
+- Initialize the project if haven't done previously -> `firebase init`
+- Select the project if there is already one created
+- Select this option for hosting -> Hosting: Configure files for Firebase Hosting
+- The above step would create a `firebase.json` and `.firebaserc` file populate with default values
+- Build the project -> `npm run build`
+- Refer https://vitejs.dev/guide/static-deploy.html#google-firebase for deploying only the built directory `firebase.json` 
+- firebase deploy --only hosting

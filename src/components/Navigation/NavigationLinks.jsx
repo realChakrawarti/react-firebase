@@ -30,9 +30,16 @@ const NavigationLinks = ({ handleRoute, user }) => {
 
             <div onClick={() => setShowProfilePopup((prev) => !prev)}>
               {photoURL ? (
-                <img width={32} height={32} alt="profile-pic" src={photoURL} />
+                <img
+                  style={{ objectFit: "cover" }}
+                  width={32}
+                  height={32}
+                  alt="profile-pic"
+                  src={photoURL}
+                />
               ) : (
                 <img
+                  style={{ objectFit: "cover" }}
                   width={32}
                   height={32}
                   alt="profile-pic"
